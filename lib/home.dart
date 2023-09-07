@@ -5,6 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gmail_clone/Provider/user_provider.dart';
 import 'package:gmail_clone/screens/profile_screen.dart';
+import 'package:gmail_clone/service/auth_service.dart';
+import 'package:googleapis/gmail/v1.dart';
+import 'package:googleapis/youtube/v3.dart';
 
 class Home extends ConsumerStatefulWidget {
   const Home({super.key});
@@ -59,6 +62,35 @@ class _HomeState extends ConsumerState<Home> {
     submitDataToRiverPod(ref);
     return userData;
   }
+
+  //
+  Future<void> fetchMail() async {
+    print('gmail fetch Start');
+    final httpClient = AuthService().getHttpClient();
+    final accessToken = AuthService().getAccessToken();
+    var gmailApi = GmailApi(httpClient);
+    var messages = await gmailApi.users.messages.list('me');
+
+    print(messages);
+    var messageIds = messages.messages!.map((e) => e.id).toList();
+    print('gmail fetch end');
+    print(messageIds);
+  }
+
+  void fetchYoutube() async {
+    print('mail fetch init');
+    final httpClient = AuthService().getHttpClient();
+    print("httpClient in fetch mail $httpClient");
+    var youTubeApi = YouTubeApi(httpClient);
+    var favorites = await youTubeApi.playlistItems.list(
+      ['snippet'],
+      playlistId: 'LL', // Liked List
+    );
+    var favoriteVideos = favorites.items!.map((e) => e.snippet!.title).toList();
+    print('youtube fetch end');
+    print(favoriteVideos);
+  }
+  //
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +160,14 @@ class _HomeState extends ConsumerState<Home> {
                     ),
                   ),
                   child: const Text('Profile'),
+                ),
+                ElevatedButton(
+                  onPressed: () => fetchMail(),
+                  child: const Text('Fetch Mails'),
+                ),
+                ElevatedButton(
+                  onPressed: () => fetchYoutube(),
+                  child: const Text('Fetch youtube'),
                 ),
               ],
             ),

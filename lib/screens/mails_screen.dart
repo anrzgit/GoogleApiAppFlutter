@@ -18,32 +18,6 @@ class MailScreen extends StatefulWidget {
 class _MailScreenState extends State<MailScreen> {
   static const String userId = 'me';
 
-  Future<void> fetchMail() async {
-    // print('mail fetch init');
-    // final httpClient = await AuthService().httpClient();
-    // print(httpClient);
-    // final gmailApi = GmailApi(httpClient);
-    // final messages = await gmailApi.users.messages.list('me');
-    // for (final message in messages.messages!) {
-    //   final fullMessage = await gmailApi.users.messages.get('me', message.id!);
-    //   print(fullMessage.snippet);
-    // }
-  }
-
-  void fetchYoutube() async {
-    print('youtube fetch init');
-    final httpClient = AuthService().getHttpClient();
-    print("httpClient in fetch youtube $httpClient");
-    var youTubeApi = YouTubeApi(httpClient);
-    var favorites = await youTubeApi.playlistItems.list(
-      ['snippet'],
-      playlistId: 'LL', // Liked List
-    );
-    var favoriteVideos = favorites.items!.map((e) => e.snippet!.title).toList();
-    print('youtube fetch end');
-    print(favoriteVideos);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,14 +26,6 @@ class _MailScreenState extends State<MailScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text('Mail Screen'),
-            ElevatedButton(
-              onPressed: () => fetchMail(),
-              child: const Text('Fetch Mails'),
-            ),
-            ElevatedButton(
-              onPressed: () => fetchYoutube(),
-              child: const Text('Fetch youtube'),
-            ),
           ],
         ),
       ),

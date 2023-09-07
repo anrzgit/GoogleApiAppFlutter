@@ -1,21 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:googleapis/androidpublisher/v3.dart';
-import 'package:googleapis/calendar/v3.dart' as calendar;
-import 'package:googleapis/servicecontrol/v2.dart';
-import 'package:http/http.dart' as http;
 import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
 import 'package:googleapis/youtube/v3.dart';
 
+// ignore: prefer_typing_uninitialized_variables
 var httpClient;
+var accessToken;
 
 class AuthService {
   signInWithGoogle() async {
     try {
       ///
       final _googleSignIn = GoogleSignIn(
-        scopes: <String>[YouTubeApi.youtubeReadonlyScope],
+        scopes: <String>[
+          YouTubeApi.youtubeReadonlyScope,
+          'https://www.googleapis.com/auth/gmail.readonly',
+        ],
       );
 
       ///
@@ -32,13 +33,7 @@ class AuthService {
       var authClient = await _googleSignIn.authenticatedClient();
 
       httpClient = await authClient;
-
-      var youTubeApi = YouTubeApi(authClient!);
-
-      final favorites = await youTubeApi.playlistItems.list(
-        ['snippet'],
-        playlistId: 'LL', // Liked List
-      );
+      accessToken = await authClient!.credentials.accessToken;
 
       print("authClient  $authClient");
       print("httpClient in sign in $httpClient");
@@ -72,7 +67,7 @@ class AuthService {
       if (doc.exists) {
         // User is already present, update only specific values
         await userRef.update({
-          'last_login': DateTime.now().toUtc().toString(),
+          'last_login': DateTime.now().toLocal().toString(),
           // Add other fields you want to update here
         });
       } else {
@@ -104,5 +99,10 @@ class AuthService {
   getHttpClient() {
     print('httpClient in getHttpClient $httpClient');
     return httpClient;
+  }
+
+  getAccessToken() {
+    print('accessToken in getAccessToken $accessToken');
+    return accessToken;
   }
 }
