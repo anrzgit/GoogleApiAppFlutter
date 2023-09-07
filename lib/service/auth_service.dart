@@ -14,7 +14,7 @@ class AuthService {
       ///
       final _googleSignIn = GoogleSignIn(
         scopes: <String>[
-          YouTubeApi.youtubeReadonlyScope,
+          // YouTubeApi.youtubeReadonlyScope,
           'https://www.googleapis.com/auth/gmail.readonly',
         ],
       );

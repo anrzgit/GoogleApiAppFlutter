@@ -17,30 +17,76 @@ class MailScreen extends StatefulWidget {
 
 class _MailScreenState extends State<MailScreen> {
   var messageIds = [];
+  late List messageSubjects = [];
+  var _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     fetchMailId();
+    _isLoading = true;
   }
 
   Future<void> fetchMailId() async {
     print('gmail fetch Start');
     final httpClient = AuthService().getHttpClient();
     var gmailApi = GmailApi(httpClient);
-    var messages = await gmailApi.users.messages.list('me');
+    var messages = await gmailApi.users.messages.list(
+      'me',
+    );
+    await getSubject(messages);
 
     print(messages);
+
+    ///
     setState(() {
       messageIds = messages.messages!.map((e) => e.id).toList();
     });
+
+    ///
     print('gmail fetch end');
-    print(messageIds);
-    fetchMail(messageIds[0]);
-    // accessHtmlBody(messageIds[0]);
+    await fetchMailDetails(messageIds[0]);
+    _isLoading = false;
+    setState(() {
+      _isLoading;
+    });
   }
 
-  Future<void> fetchMail(String messageId) async {
+  Future getSubject(ListMessagesResponse messages) async {
+    for (var message in messages.messages!) {
+      // Get the message ID
+      var messageId = message.id;
+      final httpClient = AuthService().getHttpClient();
+      var gmailApi = GmailApi(httpClient);
+
+      // Get the message details
+      var messageDetails = await gmailApi.users.messages.get('me', messageId!);
+
+      // Access the message payload
+      var payload = messageDetails.payload;
+      // Access the message headers
+      var headers = payload!.headers;
+
+      // Find the subject header
+      var subjectHeader =
+          headers!.firstWhere((header) => header.name == 'Subject');
+      // Get the subject
+      var subject = subjectHeader.value;
+
+      // Add the subject to the list
+      messageSubjects.add(subject);
+    }
+
+    ///
+    setState(() {
+      // Update the state with the list of subjects
+      messageSubjects;
+    });
+
+    ///
+  }
+
+  Future<void> fetchMailDetails(String messageId) async {
     print('mail fetch init');
     final httpClient = AuthService().getHttpClient();
     var gmailApi = GmailApi(httpClient);
@@ -84,6 +130,7 @@ class _MailScreenState extends State<MailScreen> {
     print('bodyText: $bodyText');
   }
 
+  ///Attachments
   Future<void> accessHtmlBody(String messageId) async {
 //     final httpClient = AuthService().getHttpClient();
 //     var gmailApi = GmailApi(httpClient);
@@ -114,22 +161,46 @@ class _MailScreenState extends State<MailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        color: Colors.pink[50],
-        width: double.infinity,
-        child: ListView.builder(
-          itemCount: messageIds.length,
-          itemBuilder: (context, index) => Card(
-            key: ValueKey(messageIds[index]),
-            child: SizedBox(
-              height: 50,
-              child: Text(
-                messageIds[index],
+      body: _isLoading
+          ? Center(
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  Container(
+                    margin: const EdgeInsets.only(top: 200),
+                    child: const Align(
+                      alignment: Alignment.topCenter,
+                      child: Text('Loading Your Mails...'),
+                    ),
+                  )
+                ],
+              ),
+            )
+          : SizedBox(
+              width: double.infinity,
+              child: ListView.builder(
+                itemCount: messageIds.length,
+                itemBuilder: (context, index) => Card(
+                  margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                  color: Theme.of(context).colorScheme.background,
+                  key: ValueKey(messageIds[index]),
+                  child: Container(
+                    margin: const EdgeInsets.only(
+                      left: 10,
+                      right: 10,
+                    ),
+                    height: 80,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        messageSubjects[index],
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }
