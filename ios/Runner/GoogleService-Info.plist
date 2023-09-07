@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>5096473566-b90im6gosk5n7ggiepbdtkmcc2sgr0fd.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.5096473566-b90im6gosk5n7ggiepbdtkmcc2sgr0fd</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCaOLTumr6tBnBrsWPTTqX2XOR02PFAm4Q</string>
+	<key>GCM_SENDER_ID</key>
+	<string>5096473566</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.gmailClone</string>
+	<key>PROJECT_ID</key>
+	<string>clone-ca758</string>
+	<key>STORAGE_BUCKET</key>
+	<string>clone-ca758.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:5096473566:ios:a6e789a7d482827653934f</string>
+	<key>DATABASE_URL</key>
+	<string>https://clone-ca758-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>
