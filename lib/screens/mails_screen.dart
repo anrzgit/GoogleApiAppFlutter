@@ -17,7 +17,6 @@ class _MailScreenState extends State<MailScreen> {
   Future fetchMailId = MailService().fetchMailId();
   late final List _mailIDs = MailService().messageIds;
   late List _messageSubjectsToDisplay;
-  List _messageSubjects = [];
 
   ///
   ///if i initialise a future it will render only a time only
@@ -31,9 +30,6 @@ class _MailScreenState extends State<MailScreen> {
     _future = refreshForMails();
 
     _messageSubjectsToDisplay = MailService().messageSubjects;
-    setState(() {
-      _messageSubjectsToDisplay;
-    });
   }
 
   Future<dynamic> refreshForMails() async {
@@ -61,9 +57,6 @@ class _MailScreenState extends State<MailScreen> {
     var subject = subjectHeader.value!;
     // Add the subject to the list
 
-    _messageSubjects.add(subject);
-    print("subject $subject");
-    // Return the subject
     return subject;
   }
 
