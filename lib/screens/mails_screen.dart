@@ -18,45 +18,56 @@ class MailScreen extends StatefulWidget {
 class _MailScreenState extends State<MailScreen> {
   var messageIds = [];
   late List messageSubjects = [];
-  var _isLoading = false;
+  final httpClient = AuthService().getHttpClient();
 
   @override
   void initState() {
     super.initState();
-    fetchMailId();
-    _isLoading = true;
+
+    AuthService().signInWithGoogle();
   }
 
-  Future<void> fetchMailId() async {
-    print('gmail fetch Start');
-    final httpClient = AuthService().getHttpClient();
-    var gmailApi = GmailApi(httpClient);
-    var messages = await gmailApi.users.messages.list(
-      'me',
-    );
-    await getSubject(messages);
+  Future fetchMailId() async {
+    try {
+      print('gmail fetch Start');
 
-    print(messages);
+      ///
+      //sign in
+      // await AuthService().signInWithGoogle();
+      print(1111111111111111111);
 
-    ///
-    setState(() {
+      ///
+      var gmailApi = GmailApi(httpClient);
+      print(22222222222222222);
+      var messages = await gmailApi.users.messages.list('me', maxResults: 40);
+      await getSubject(messages);
+
+      print(messages);
+
+      ///
+      // setState(() {
+      //   messageIds = messages.messages!.map((e) => e.id).toList();
+      // });
       messageIds = messages.messages!.map((e) => e.id).toList();
-    });
 
-    ///
-    print('gmail fetch end');
-    await fetchMailDetails(messageIds[0]);
-    _isLoading = false;
-    setState(() {
-      _isLoading;
-    });
+      ///
+      print('gmail fetch end');
+      await fetchMailDetails(messageIds[0]);
+
+      // setState(() {
+      //   _isLoading;
+      // });
+      return messageIds;
+    } catch (e) {
+      print('error in fetchMailId $e');
+    }
   }
 
   Future getSubject(ListMessagesResponse messages) async {
     for (var message in messages.messages!) {
       // Get the message ID
       var messageId = message.id;
-      final httpClient = AuthService().getHttpClient();
+
       var gmailApi = GmailApi(httpClient);
 
       // Get the message details
@@ -78,17 +89,13 @@ class _MailScreenState extends State<MailScreen> {
     }
 
     ///
-    setState(() {
-      // Update the state with the list of subjects
-      messageSubjects;
-    });
 
     ///
   }
 
   Future<void> fetchMailDetails(String messageId) async {
     print('mail fetch init');
-    final httpClient = AuthService().getHttpClient();
+
     var gmailApi = GmailApi(httpClient);
     // Get the message details
     var messageDetails = await gmailApi.users.messages.get('me', messageId);
@@ -132,7 +139,6 @@ class _MailScreenState extends State<MailScreen> {
 
   ///Attachments
   Future<void> accessHtmlBody(String messageId) async {
-//     final httpClient = AuthService().getHttpClient();
 //     var gmailApi = GmailApi(httpClient);
 //     var messageDetails = await gmailApi.users.messages.get('me', messageId);
 
@@ -160,24 +166,29 @@ class _MailScreenState extends State<MailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _isLoading
-          ? Center(
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  const CircularProgressIndicator(),
-                  Container(
-                    margin: const EdgeInsets.only(top: 200),
-                    child: const Align(
-                      alignment: Alignment.topCenter,
-                      child: Text('Loading Your Mails...'),
-                    ),
-                  )
-                ],
-              ),
-            )
-          : SizedBox(
+    return SafeArea(
+      child: Scaffold(
+        body: FutureBuilder(
+          future: fetchMailId(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    const CircularProgressIndicator(),
+                    Container(
+                      margin: const EdgeInsets.only(top: 200),
+                      child: const Align(
+                        alignment: Alignment.topCenter,
+                        child: Text('Loading Your Mails...'),
+                      ),
+                    )
+                  ],
+                ),
+              );
+            }
+            return SizedBox(
               width: double.infinity,
               child: ListView.builder(
                 itemCount: messageIds.length,
@@ -200,7 +211,10 @@ class _MailScreenState extends State<MailScreen> {
                   ),
                 ),
               ),
-            ),
+            );
+          },
+        ),
+      ),
     );
   }
 }

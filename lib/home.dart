@@ -42,6 +42,7 @@ class _HomeState extends ConsumerState<Home> {
   void initState() {
     super.initState();
     getDataFromFireStore();
+    AuthService().signInWithGoogle();
   }
 
   getFutureDataFromFirestore() async {
