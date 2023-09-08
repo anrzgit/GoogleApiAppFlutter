@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:gmail_clone/screens/mail_content_screem.dart';
 import 'package:gmail_clone/service/auth_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:googleapis/gmail/v1.dart';
@@ -19,6 +20,8 @@ class _MailScreenState extends State<MailScreen> {
   var messageIds = [];
   late List messageSubjects = [];
   final httpClient = AuthService().getHttpClient();
+  // String? subject;
+  // String? sender;
 
   @override
   void initState() {
@@ -30,13 +33,8 @@ class _MailScreenState extends State<MailScreen> {
   Future fetchMailId() async {
     try {
       print('gmail fetch Start');
-
-      ///
-      //sign in
-      // await AuthService().signInWithGoogle();
       print(1111111111111111111);
 
-      ///
       var gmailApi = GmailApi(httpClient);
       print(22222222222222222);
       var messages = await gmailApi.users.messages.list('me', maxResults: 40);
@@ -52,7 +50,6 @@ class _MailScreenState extends State<MailScreen> {
 
       ///
       print('gmail fetch end');
-      await fetchMailDetails(messageIds[0]);
 
       // setState(() {
       //   _isLoading;
@@ -91,50 +88,6 @@ class _MailScreenState extends State<MailScreen> {
     ///
 
     ///
-  }
-
-  Future<void> fetchMailDetails(String messageId) async {
-    print('mail fetch init');
-
-    var gmailApi = GmailApi(httpClient);
-    // Get the message details
-    var messageDetails = await gmailApi.users.messages.get('me', messageId);
-
-    // Access the message payload
-    var payload = messageDetails.payload;
-
-    print("payload,$payload");
-    // Access the message headers
-    var headers = payload!.headers;
-    // Access the message parts
-    var parts = payload.parts;
-
-    print("headers,$headers");
-
-    // Find the part containing the message body
-
-    // Find the subject header
-    var subjectHeader =
-        headers!.firstWhere((header) => header.name == 'Subject');
-    // Get the subject
-    var subject = subjectHeader.value;
-
-    // Find the from header
-    var fromHeader = headers.firstWhere((header) => header.name == 'From');
-    // Get the sender
-    var sender = fromHeader.value;
-
-    ///
-    var bodyPart = parts!.firstWhere((part) => part.mimeType == 'text/plain');
-    var bodyData = bodyPart.body!.data;
-    var bodyText = utf8.decode(
-        base64.decode(bodyData!.replaceAll('_', '/').replaceAll('-', '+')));
-
-    ///
-
-    print('Subject: $subject');
-    print('Sender: $sender');
-    print('bodyText: $bodyText');
   }
 
   ///Attachments
@@ -192,20 +145,31 @@ class _MailScreenState extends State<MailScreen> {
               width: double.infinity,
               child: ListView.builder(
                 itemCount: messageIds.length,
-                itemBuilder: (context, index) => Card(
-                  margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                  color: Theme.of(context).colorScheme.background,
-                  key: ValueKey(messageIds[index]),
-                  child: Container(
-                    margin: const EdgeInsets.only(
-                      left: 10,
-                      right: 10,
+                itemBuilder: (context, index) => GestureDetector(
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MailContent(
+                        subject: messageSubjects[index],
+                        messageId: messageIds[index],
+                      ),
                     ),
-                    height: 80,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        messageSubjects[index],
+                  ),
+                  child: Card(
+                    margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                    color: Theme.of(context).colorScheme.background,
+                    key: ValueKey(messageIds[index]),
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        left: 10,
+                        right: 10,
+                      ),
+                      height: 80,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          messageSubjects[index],
+                        ),
                       ),
                     ),
                   ),
