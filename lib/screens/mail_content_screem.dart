@@ -26,6 +26,7 @@ class _MailContentState extends State<MailContent> {
   late String bodyHtml;
   bool _isLoading = false;
   late final WebViewController _controller;
+  double _webViewHeight = 1.0;
 
   ///
   @override
@@ -98,29 +99,37 @@ class _MailContentState extends State<MailContent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SizedBox(
               width: double.infinity,
-              child: Container(
-                padding: const EdgeInsets.only(left: 15, right: 15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('From: $sender '),
-                    Text('Date: $date'),
-                    const SizedBox(height: 10),
-                    Text(widget.subject,
+              height: double.infinity,
+              child: Expanded(
+                child: Container(
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('From: $sender '),
+                      Text('Date: $date'),
+                      const SizedBox(height: 10),
+                      Text(
+                        widget.subject,
                         style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w500)),
-                    Expanded(
-                      child: Container(
-                          width: double.infinity,
-                          color: Colors.pink[50],
-                          child: WebViewWidget(controller: _controller)),
-                    ),
-                  ],
+                            fontSize: 18, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: Container(
+                            width: double.infinity,
+                            color: Colors.pink[50],
+                            child: WebViewWidget(controller: _controller)),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
