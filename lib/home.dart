@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gmail_clone/Provider/user_provider.dart';
 import 'package:gmail_clone/screens/profile_screen.dart';
 import 'package:gmail_clone/service/auth_service.dart';
+import 'package:gmail_clone/service/mail_service.dart';
 import 'package:googleapis/gmail/v1.dart';
 import 'package:googleapis/youtube/v3.dart';
 
