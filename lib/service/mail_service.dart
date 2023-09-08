@@ -51,7 +51,9 @@ class MailService {
       var subject = subjectHeader.value;
 
       // Add the subject to the list
-      _messageSubjects.add(subject);
+
+      messageSubjects.add(subject);
+      print("messageSubjects $_messageSubjects");
     }
   }
 

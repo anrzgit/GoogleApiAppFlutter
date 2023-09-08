@@ -6,9 +6,8 @@ import 'package:googleapis/gmail/v1.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class MailContent extends StatefulWidget {
-  const MailContent(
-      {super.key, required this.subject, required this.messageId});
-  final String subject;
+  MailContent({super.key, required this.messageId});
+
   final String messageId;
 
   @override
@@ -23,6 +22,7 @@ class _MailContentState extends State<MailContent> {
   ///
   String? sender;
   String? date;
+  String? subject;
   late String bodyHtml;
   bool _isLoading = false;
   late final WebViewController _controller;
@@ -63,7 +63,7 @@ class _MailContentState extends State<MailContent> {
     var subjectHeader =
         headers!.firstWhere((header) => header.name == 'Subject');
     // Get the subject
-    var subject = subjectHeader.value;
+    subject = subjectHeader.value;
 
     // Find the from header
     var fromHeader = headers.firstWhere((header) => header.name == 'From');
@@ -118,12 +118,12 @@ class _MailContentState extends State<MailContent> {
                         children: [
                           Text('From: $sender '),
                           Text('Date: $date'),
-                          const SizedBox(height: 10),
                           Text(
-                            widget.subject,
+                            'Subject: $subject',
                             style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.w500),
                           ),
+                          const SizedBox(height: 10),
                         ],
                       ),
                     ),
