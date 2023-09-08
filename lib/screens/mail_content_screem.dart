@@ -107,29 +107,36 @@ class _MailContentState extends State<MailContent> {
           : SizedBox(
               width: double.infinity,
               height: double.infinity,
-              child: Expanded(
-                child: Container(
-                  padding: const EdgeInsets.only(left: 15, right: 15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('From: $sender '),
-                      Text('Date: $date'),
-                      const SizedBox(height: 10),
-                      Text(
-                        widget.subject,
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.w500),
+              child: SizedBox(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('From: $sender '),
+                          Text('Date: $date'),
+                          const SizedBox(height: 10),
+                          Text(
+                            widget.subject,
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w500),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 10),
-                      Expanded(
-                        child: Container(
-                            width: double.infinity,
-                            color: Colors.pink[50],
-                            child: WebViewWidget(controller: _controller)),
+                    ),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 5, right: 5),
+                        width: double.infinity,
+                        color: Colors.pink[50],
+                        child: WebViewWidget(controller: _controller),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

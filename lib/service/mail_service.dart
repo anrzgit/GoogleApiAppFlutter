@@ -2,7 +2,7 @@ import 'package:gmail_clone/service/auth_service.dart';
 import 'package:googleapis/gmail/v1.dart';
 
 var _messageIds = [];
-late List _messageSubjects = [];
+var _messageSubjects = [];
 final _httpClient = AuthService().getHttpClient();
 
 class MailService {
@@ -18,18 +18,11 @@ class MailService {
 
       print(messages);
 
-      ///
-      // setState(() {
-      //   messageIds = messages.messages!.map((e) => e.id).toList();
-      // });
       _messageIds = messages.messages!.map((e) => e.id).toList();
 
       ///
       print('gmail fetch end');
 
-      // setState(() {
-      //   _isLoading;
-      // });
       return messageIds;
     } catch (e) {
       print('error in fetchMailId $e');
@@ -58,7 +51,7 @@ class MailService {
       var subject = subjectHeader.value;
 
       // Add the subject to the list
-      messageSubjects.add(subject);
+      _messageSubjects.add(subject);
     }
   }
 
