@@ -3,7 +3,6 @@ import 'package:googleapis/gmail/v1.dart';
 
 var _messageIds = [];
 var _messageSubjects = [];
-final _httpClient = AuthService().getHttpClient();
 
 class MailService {
   Future fetchMailId() async {
@@ -15,8 +14,6 @@ class MailService {
       print(22222222222222222);
       var messages = await gmailApi.users.messages.list('me', maxResults: 40);
       await getSubject(messages);
-
-      print(messages);
 
       _messageIds = messages.messages!.map((e) => e.id).toList();
 
@@ -53,7 +50,6 @@ class MailService {
       // Add the subject to the list
 
       messageSubjects.add(subject);
-      print("messageSubjects $_messageSubjects");
     }
   }
 

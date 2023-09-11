@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmail_clone/home.dart';
+import 'package:gmail_clone/screens/chat_screen.dart';
 import 'package:gmail_clone/screens/mails_screen.dart';
 import 'package:gmail_clone/screens/profile_screen.dart';
 
@@ -15,7 +16,7 @@ class _MyWidgetState extends State<NavigationScreen> {
   List<Widget> homeScreenItems = [
     const Home(),
     const MailScreen(),
-    const ProfileScreen()
+    const ChatScreen(),
   ];
 
   int _page = 0;
@@ -72,7 +73,7 @@ class _MyWidgetState extends State<NavigationScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.person_outline,
+              Icons.chat_bubble_outline,
             ),
           ),
         ],
