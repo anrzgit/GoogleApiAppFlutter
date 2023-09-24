@@ -4,6 +4,7 @@ class User {
   final String? email;
   final String? username;
   final String? profilePic;
+  final String? coverPic;
   final String? name;
   final String? phoneNumber;
   final String? createdAt;
@@ -14,6 +15,7 @@ class User {
     this.email,
     this.username,
     this.profilePic,
+    this.coverPic,
     this.name,
     this.phoneNumber,
     this.createdAt,
@@ -28,6 +30,7 @@ class UserNotifier extends StateNotifier<User> {
       {required String email,
       String? username,
       required String profilePic,
+      required String coverPic,
       required String name,
       String? phoneNumber,
       required String createdAt,
@@ -37,6 +40,7 @@ class UserNotifier extends StateNotifier<User> {
       email: email,
       username: username,
       profilePic: profilePic,
+      coverPic: coverPic,
       name: name,
       phoneNumber: phoneNumber,
       createdAt: createdAt,

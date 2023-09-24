@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gmail_clone/Provider/user_provider.dart';
 import 'package:gmail_clone/screens/profile_screen.dart';
 import 'package:gmail_clone/service/auth_service.dart';
-import 'package:gmail_clone/service/mail_service.dart';
 import 'package:googleapis/gmail/v1.dart';
 import 'package:googleapis/youtube/v3.dart';
 
@@ -29,6 +28,7 @@ class _HomeState extends ConsumerState<Home> {
           email: user!['email'],
           username: user!['username'],
           profilePic: user!['profile_pic'],
+          coverPic: user!['cover_pic'],
           name: user!['name'],
           phoneNumber: user!['phoneNumber'],
           createdAt: user!['created_at'],
@@ -104,78 +104,80 @@ class _HomeState extends ConsumerState<Home> {
 
     return FutureBuilder(
       future: getDataFromFireStore(),
-      builder: (context, snapshot) => Scaffold(
-        appBar: AppBar(
-          systemOverlayStyle: SystemUiOverlayStyle(
-            systemNavigationBarColor: Theme.of(context)
-                .colorScheme
-                .background, // navigation bar color
-          ),
-          title: const Text(
-            "Home",
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          actions: [
-            GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ProfileScreen(),
-                ),
-              ),
-              child: Container(
-                margin: const EdgeInsets.only(right: 7, bottom: 7),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black12, // Border color
-                    width: 2.0,
-                  ),
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30.0),
-                  child: Image.network(
-                    user.profilePic ?? "waiting for data",
-                    fit: BoxFit.cover,
-                    height: 56.0, // Set the height of the AppBar
-                  ),
-                ),
-              ),
+      builder: (context, snapshot) {
+        return Scaffold(
+          appBar: AppBar(
+            systemOverlayStyle: SystemUiOverlayStyle(
+              systemNavigationBarColor: Theme.of(context)
+                  .colorScheme
+                  .background, // navigation bar color
             ),
-          ],
-        ),
-        body: SizedBox(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Welcome ${user.name}',
-                  style: Theme.of(context).textTheme.bodyMedium,
+            title: const Text(
+              "Home",
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            actions: [
+              GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProfileScreen(),
+                  ),
                 ),
-                TextButton(
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const ProfileScreen(),
+                child: Container(
+                  margin: const EdgeInsets.only(right: 7, bottom: 7),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.black12, // Border color
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.circular(30.0),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(30.0),
+                    child: Image.network(
+                      user.profilePic ?? "waiting for data",
+                      fit: BoxFit.cover,
+                      height: 56.0, // Set the height of the AppBar
                     ),
                   ),
-                  child: const Text('Profile'),
                 ),
-                ElevatedButton(
-                  onPressed: () => fetchMail(),
-                  child: const Text('Fetch Mails'),
-                ),
-                ElevatedButton(
-                  onPressed: () => fetchYoutube(),
-                  child: const Text('Fetch youtube'),
-                ),
-              ],
+              ),
+            ],
+          ),
+          body: SizedBox(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Welcome ${user.name}',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ProfileScreen(),
+                      ),
+                    ),
+                    child: const Text('Profile'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => fetchMail(),
+                    child: const Text('Fetch Mails'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => fetchYoutube(),
+                    child: const Text('Fetch youtube'),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -10,6 +10,14 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Chat Screen',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
+    );
   }
 }

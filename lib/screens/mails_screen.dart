@@ -27,6 +27,9 @@ class _MailScreenState extends State<MailScreen> {
   @override
   void initState() {
     super.initState();
+    setState(() {
+      _isLoading = true;
+    });
     _future = refreshForMails();
     setState(() {
       _isLoading = false;
@@ -34,7 +37,7 @@ class _MailScreenState extends State<MailScreen> {
   }
 
   Future<dynamic> refreshForMails() async {
-    await AuthService().signInWithGoogle();
+    // await AuthService().signInWithGoogle();
     await MailService().fetchMailId();
   }
 

@@ -89,27 +89,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     height: 200,
                     width: double.infinity,
                     child: _pickedImage == null
-                        ? Align(
-                            alignment: Alignment.topCenter,
-                            child: Padding(
-                              padding: const EdgeInsets.all(30),
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                    Theme.of(context)
-                                        .colorScheme
-                                        .inversePrimary,
-                                  ),
-                                ),
-                                onPressed: () => pickImageFromGallery(),
-                                child: Text(
-                                  'Pick Image',
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .background),
-                                ),
-                              ),
+                        ? ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(30),
+                              bottomRight: Radius.circular(30),
+                            ),
+                            child: Image.network(
+                              user.coverPic!,
+                              alignment: Alignment.bottomLeft,
+                              fit: BoxFit.fill,
                             ),
                           )
                         : ClipRRect(
@@ -123,6 +111,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               fit: BoxFit.fill,
                             ),
                           ),
+                  ),
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(30),
+                      child: IconButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).colorScheme.surface,
+                            ),
+                          ),
+                          onPressed: () => pickImageFromGallery(),
+                          icon: const Icon(Icons.edit)),
+                    ),
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
