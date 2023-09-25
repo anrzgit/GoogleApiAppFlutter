@@ -16,11 +16,11 @@ class _MailScreenState extends State<MailScreen> {
   ///
   Future fetchMailId = MailService().fetchMailId();
   late final List _mailIDs = MailService().messageIds;
+  late List _messageSubjectsToDisplay;
 
   ///
   ///if i initialise a future it will render only a time only
   late Future _future;
-  bool _isLoading = true;
 
   ///
 
@@ -31,14 +31,14 @@ class _MailScreenState extends State<MailScreen> {
       _isLoading = true;
     });
     _future = refreshForMails();
-    setState(() {
-      _isLoading = false;
-    });
+
+    _messageSubjectsToDisplay = MailService().messageSubjects;
   }
 
   Future<dynamic> refreshForMails() async {
     // await AuthService().signInWithGoogle();
     await MailService().fetchMailId();
+    _messageSubjectsToDisplay = MailService().messageSubjects;
   }
 
   Future<String> getSubject(String messageId) async {
@@ -71,57 +71,53 @@ class _MailScreenState extends State<MailScreen> {
       child: Scaffold(
         body: SizedBox(
           width: double.infinity,
-          child: _isLoading
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : RefreshIndicator(
-                  onRefresh: () => refreshForMails(),
-                  child: FutureBuilder(
-                    future: _future,
-                    builder: (context, snapshot) {
-                      return ListView.builder(
-                        itemCount: MailService().messageIds.length,
-                        itemBuilder: (context, index) => GestureDetector(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MailContent(
-                                messageId: MailService().messageIds[index],
-                              ),
-                            ),
-                          ),
-                          child: Card(
-                            margin: const EdgeInsets.only(
-                                left: 10, right: 10, top: 10),
-                            color: Theme.of(context).colorScheme.background,
-                            key: ValueKey(MailService().messageIds[index]),
-                            child: Container(
-                              margin: const EdgeInsets.only(
-                                left: 10,
-                                right: 10,
-                              ),
-                              height: 80,
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: FutureBuilder<String>(
-                                  future: getSubject(_mailIDs[index]),
-                                  builder: (context, snapshot) {
-                                    if (snapshot.hasData) {
-                                      return Text(snapshot.data!);
-                                    } else {
-                                      return const LinearProgressIndicator();
-                                    }
-                                  },
-                                ),
-                              ),
-                            ),
+          child: RefreshIndicator(
+            onRefresh: () => refreshForMails(),
+            child: FutureBuilder(
+              future: _future,
+              builder: (context, snapshot) {
+                return ListView.builder(
+                  itemCount: MailService().messageIds.length,
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MailContent(
+                          messageId: MailService().messageIds[index],
+                        ),
+                      ),
+                    ),
+                    child: Card(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      color: Theme.of(context).colorScheme.background,
+                      key: ValueKey(MailService().messageIds[index]),
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                          left: 10,
+                          right: 10,
+                        ),
+                        height: 80,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: FutureBuilder<String>(
+                            future: getSubject(_mailIDs[index]),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return Text(snapshot.data!);
+                              } else {
+                                return const LinearProgressIndicator();
+                              }
+                            },
                           ),
                         ),
-                      );
-                    },
+                      ),
+                    ),
                   ),
-                ),
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
