@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmail_clone/home.dart';
 import 'package:gmail_clone/screens/mails_screen.dart';
+import 'package:gmail_clone/screens/play_videos.dart';
 import 'package:gmail_clone/screens/profile_screen.dart';
 
 class NavigationScreen extends StatefulWidget {
@@ -15,6 +16,7 @@ class _MyWidgetState extends State<NavigationScreen> {
   List<Widget> homeScreenItems = [
     const Home(),
     const MailScreen(),
+    const PlayVideos(),
     const ProfileScreen()
   ];
 
@@ -68,6 +70,11 @@ class _MyWidgetState extends State<NavigationScreen> {
           BottomNavigationBarItem(
             icon: Icon(
               Icons.mail_outline,
+            ),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.video_file,
             ),
           ),
           BottomNavigationBarItem(

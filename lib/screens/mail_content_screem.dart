@@ -6,7 +6,7 @@ import 'package:googleapis/gmail/v1.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class MailContent extends StatefulWidget {
-  MailContent({super.key, required this.messageId});
+  const MailContent({super.key, required this.messageId});
 
   final String messageId;
 
@@ -49,13 +49,10 @@ class _MailContentState extends State<MailContent> {
     // Access the message payload
     var payload = messageDetails.payload;
 
-    print("payload,$payload");
     // Access the message headers
     var headers = payload!.headers;
     // Access the message parts
     var parts = payload.parts;
-
-    print("headers,$headers");
 
     // Find the part containing the message body
 
@@ -83,10 +80,6 @@ class _MailContentState extends State<MailContent> {
         base64.decode(bodyData!.replaceAll('_', '/').replaceAll('-', '+')));
 
     ///
-
-    print('Subject: $subject');
-    print('Sender: $sender');
-    print('Body: $bodyHtml');
 
     setState(() {
       _isLoading = false;

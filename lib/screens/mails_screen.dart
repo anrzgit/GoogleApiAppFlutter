@@ -17,6 +17,7 @@ class _MailScreenState extends State<MailScreen> {
   Future fetchMailId = MailService().fetchMailId();
   late final List _mailIDs = MailService().messageIds;
   late List _messageSubjectsToDisplay;
+  bool _isLoading = false;
 
   ///
   ///if i initialise a future it will render only a time only

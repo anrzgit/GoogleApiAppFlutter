@@ -1,14 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
-import 'package:googleapis/youtube/v3.dart';
 
 // ignore: prefer_typing_uninitialized_variables
 var httpClient;
 var accessToken;
 
 class AuthService {
+  ///
+  signInWithPhoneNumber(String _verificationId, String smsCode) async {
+    try {
+      final AuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: _verificationId, smsCode: smsCode);
+      final FirebaseAuth _auth = FirebaseAuth.instance;
+      final User? user = (await _auth.signInWithCredential(credential)).user;
+
+      print('Successfully signed in UID: ${user!.uid}');
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  ///
   signInWithGoogle() async {
     try {
       ///
@@ -81,6 +96,7 @@ class AuthService {
           'created_at': DateTime.now().toUtc().toString(),
           'is_admin': false,
           'is_super_admin': false,
+          'videos': [],
         });
       }
 
@@ -90,10 +106,10 @@ class AuthService {
     }
   }
 
-  signOut() async {
+  signOut(BuildContext context) async {
     await GoogleSignIn().signOut();
     await FirebaseAuth.instance.signOut();
-    print('signed out');
+    Navigator.of(context).pop();
   }
 
   getHttpClient() {

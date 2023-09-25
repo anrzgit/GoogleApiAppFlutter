@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gmail_clone/Provider/user_provider.dart';
 import 'package:gmail_clone/service/auth_service.dart';
+import 'package:gmail_clone/widget/user_image_picker.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
@@ -11,8 +14,11 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
-  void _signOut() async {
-    await AuthService().signOut();
+  //
+  File? _pickedImage;
+
+  void _signOut(BuildContext context) async {
+    await AuthService().signOut(context);
 
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
@@ -20,6 +26,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         content: Text('You have been logged out'),
       ),
     );
+  }
+
+  void pickImageFromGallery() async {
+    PickImageWidget pickImageWidget = PickImageWidget();
+    _pickedImage = await pickImageWidget.pickImage();
+    setState(() {
+      _pickedImage = _pickedImage;
+    });
+    await pickImageWidget.uploadImageToFireSrore(_pickedImage!);
   }
 
   @override
@@ -55,27 +70,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     height: 200,
                     width: double.infinity,
                     child: _pickedImage == null
-                        ? Align(
-                            alignment: Alignment.topCenter,
-                            child: Padding(
-                              padding: const EdgeInsets.all(30),
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                    Theme.of(context)
-                                        .colorScheme
-                                        .inversePrimary,
-                                  ),
-                                ),
-                                onPressed: () => pickImageFromGallery(),
-                                child: Text(
-                                  'Pick Image',
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .background),
-                                ),
-                              ),
+                        ? ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(30),
+                              bottomRight: Radius.circular(30),
+                            ),
+                            child: Image.network(
+                              user.coverPic ?? "waiting for data",
+                              alignment: Alignment.bottomLeft,
+                              fit: BoxFit.fill,
                             ),
                           )
                         : ClipRRect(
@@ -91,6 +94,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           ),
                   ),
                   Align(
+                    alignment: Alignment.topRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(30),
+                      child: IconButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                              Theme.of(context).colorScheme.surface,
+                            ),
+                          ),
+                          onPressed: () => pickImageFromGallery(),
+                          icon: const Icon(Icons.edit)),
+                    ),
+                  ),
+                  Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
                       margin: const EdgeInsets.all(20),
@@ -99,7 +116,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         image: DecorationImage(
-                          image: NetworkImage(user.profilePic!),
+                          image: NetworkImage(user.profilePic ?? 'waiting'),
                           fit: BoxFit.fill,
                         ),
                         border: Border.all(
@@ -134,7 +151,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   Theme.of(context).colorScheme.error,
                 ),
               ),
-              onPressed: () => _signOut(),
+              onPressed: () => _signOut(context),
               child: Text(
                 'Logout',
                 style:

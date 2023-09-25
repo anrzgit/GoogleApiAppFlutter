@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gmail_clone/service/auth_service.dart';
+import 'package:gmail_clone/service/phone_auth_service.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -31,6 +32,7 @@ class _AuthScreenState extends State<AuthScreen> {
         child: Column(
           children: [
             const Spacer(flex: 2),
+            const PhoneNumberSignIn(),
             ElevatedButton(
               onPressed: () => loginUser(),
               child: _isLoading

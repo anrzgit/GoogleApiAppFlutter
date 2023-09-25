@@ -53,7 +53,6 @@ class MailService {
       // Add the subject to the list
 
       messageSubjects.add(subject);
-      print("messageSubjects $_messageSubjects");
     }
   }
 

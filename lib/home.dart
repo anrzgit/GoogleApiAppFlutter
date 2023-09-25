@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gmail_clone/Provider/user_provider.dart';
 import 'package:gmail_clone/screens/profile_screen.dart';
+import 'package:gmail_clone/screens/record_videos_screen.dart';
 import 'package:gmail_clone/service/auth_service.dart';
 import 'package:googleapis/gmail/v1.dart';
 import 'package:googleapis/youtube/v3.dart';
@@ -66,18 +67,16 @@ class _HomeState extends ConsumerState<Home> {
   }
 
   //
-  Future<void> fetchMail() async {
-    print('gmail fetch Start');
-    final httpClient = AuthService().getHttpClient();
-    final accessToken = AuthService().getAccessToken();
-    var gmailApi = GmailApi(httpClient);
-    var messages = await gmailApi.users.messages.list('me');
+  // Future<void> fetchMail() async {
+  //   print('gmail fetch Start');
+  //   final httpClient = AuthService().getHttpClient();
+  //   final accessToken = AuthService().getAccessToken();
+  //   var gmailApi = GmailApi(httpClient);
+  //   var messages = await gmailApi.users.messages.list('me');
 
-    print(messages);
-    var messageIds = messages.messages!.map((e) => e.id).toList();
-    print('gmail fetch end');
-    print(messageIds);
-  }
+  //   var messageIds = messages.messages!.map((e) => e.id).toList();
+  //   print('gmail fetch end');
+  // }
 
   void fetchYoutube() async {
     print('mail fetch init');
@@ -155,23 +154,32 @@ class _HomeState extends ConsumerState<Home> {
                     'Welcome ${user.name}',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                  TextButton(
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProfileScreen(),
-                      ),
-                    ),
-                    child: const Text('Profile'),
-                  ),
+
+                  // ElevatedButton(
+                  //   onPressed: () => fetchMail(),
+                  //   child: const Text('Fetch Mails'),
+                  // ),
+
+                  const SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () => fetchMail(),
-                    child: const Text('Fetch Mails'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => fetchYoutube(),
-                    child: const Text('Fetch youtube'),
-                  ),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize:
+                          Size(MediaQuery.of(context).size.width * 0.9, 40),
+                      side: const BorderSide(width: 3, color: Colors.black),
+                      elevation: 3, //elevation of button
+                      shape: RoundedRectangleBorder(
+                          //to set border radius to button
+                          borderRadius: BorderRadius.circular(18)),
+                      padding: const EdgeInsets.all(20),
+                    ), //content padding inside button
+
+                    onPressed: () =>
+                        Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const VideoRecord(),
+                    )),
+
+                    child: const Text('Record Videos'),
+                  )
                 ],
               ),
             ),
